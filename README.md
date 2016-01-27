@@ -19,7 +19,7 @@ Use the LDAP strategy as a middleware in your application:
         :bind_dn => 'default_bind_dn'
         :password => 'password'
         # Or
-        #:bind_dn => 'sANAccountName=%{username}, dc=intridea, dc=com',
+        #:bind_dn => '%{uid}=%{username}, %{base}',
         #:password => '%{password}'
 
 All of the listed options are required, with the exception of :title, :name_proc, :bind_dn, and :password.
