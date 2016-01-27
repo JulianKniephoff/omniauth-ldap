@@ -35,7 +35,18 @@ module OmniAuth
       end
 
       def callback_phase
-        @adaptor = OmniAuth::LDAP::Adaptor.new @options
+        options = @options.dup
+        if options[:bind_dn].respond_to?(:%)
+          options[:bind_dn] = options[:bind_dn] % {
+            :username => request['username']
+          }
+        end
+        if options[:password].respond_to?(:%)
+          options[:password] = options[:password] % {
+            :password => request['password']
+          }
+        end
+        @adaptor = OmniAuth::LDAP::Adaptor.new options
 
         return fail!(:missing_credentials) if missing_credentials?
         begin
