@@ -146,7 +146,7 @@ describe "OmniAuth::Strategies::LDAP" do
               configuration[:password].should == 'password'
             end
 
-            post('/auth/ldap/callback', { :username => "ping", :password => "password" })
+            post('/auth/ldap/callback', { :username => "ping@score.local", :password => "password" })
           end
         end
       end
