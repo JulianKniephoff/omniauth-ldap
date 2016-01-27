@@ -38,7 +38,9 @@ module OmniAuth
         options = @options.dup
         if options[:bind_dn].respond_to?(:%)
           options[:bind_dn] = options[:bind_dn] % {
-            :username => request['username']
+            :username => request['username'],
+            :base => options[:base],
+            :uid => options[:uid]
           }
         end
         if options[:password].respond_to?(:%)
