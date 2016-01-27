@@ -18,6 +18,9 @@ Use the LDAP strategy as a middleware in your application:
         :name_proc => Proc.new {|name| name.gsub(/@.*$/,'')}
         :bind_dn => 'default_bind_dn'
         :password => 'password'
+        # Or
+        #:bind_dn => 'sANAccountName=%{username}, dc=intridea, dc=com',
+        #:password => '%{password}'
 
 All of the listed options are required, with the exception of :title, :name_proc, :bind_dn, and :password.
 Allowed values of :method are: :plain, :ssl, :tls.
@@ -28,7 +31,9 @@ Allowed values of :method are: :plain, :ssl, :tls.
   You usually get a simple identifier like a username or an email address, along with a password. 
   Since many LDAP servers don't allow anonymous access, search function will require a bound connection, 
   :bind_dn and :password will be required for searching on the username or email to retrieve the DN attribute 
-  for the user. If the LDAP server allows anonymous access, you don't need to provide these two parameters.
+  for the user. If the LDAP server allows anonymous access, you don't need to provide these two parameters. 
+  You can also use the user submitted credentials, by using a similar format to the :filter option (see below), 
+  to perform the search. This might be needed if there is no "read-only admin account" that is allowed to see everything.
 
 :uid is the LDAP attribute name for the user name in the login form. 
   typically AD would be 'sAMAccountName' or 'UserPrincipalName', while OpenLDAP is 'uid'.
