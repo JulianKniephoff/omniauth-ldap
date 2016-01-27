@@ -135,18 +135,18 @@ describe "OmniAuth::Strategies::LDAP" do
           let(:app) do
             Rack::Builder.new {
               use OmniAuth::Test::PhonySession
-              use MyLdapProvider, :name => 'ldap', :title => 'MyLdap Form', :host => '192.168.1.145', :base => 'dc=score, dc=local', :name_proc => Proc.new {|name| name.gsub(/@.*$/,'')}, :bind_dn => 'uid=%{username}, ou=people, dc=score, dc=local', :password => '%{password}'
+              use MyLdapProvider, :name => 'ldap', :title => 'MyLdap Form', :host => '192.168.1.145', :base => 'dc=score, dc=local', :name_proc => Proc.new {|name| name.gsub(/@.*$/,'')}, :bind_dn => '%{uid}=%{username}, ou=people, %{base}', :password => '%{password}'
               run lambda { |env| [404, {'Content-Type' => 'text/plain'}, [env.key?('omniauth.auth').to_s]] }
             }.to_app
           end
 
           it 'should use the given username and password for authentication' do
             OmniAuth::LDAP::Adaptor.should_receive(:new) do |configuration|
-              configuration[:bind_dn].should == 'uid=ping, ou=people, dc=score, dc=local'
+              configuration[:bind_dn].should == 'sAMAccountName=ping, ou=people, dc=score, dc=local'
               configuration[:password].should == 'password'
             end
 
-            post('/auth/ldap/callback', {:username => "ping", :password => "password"})
+            post('/auth/ldap/callback', { :username => "ping", :password => "password" })
           end
         end
       end
